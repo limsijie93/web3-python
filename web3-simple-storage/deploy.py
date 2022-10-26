@@ -25,3 +25,9 @@ compiled_sol = compile_standard(
 
 with open("compiled_code.json", "w") as f:
     json.dump(compiled_sol, f)
+
+## Getting the bytecode
+bytecode = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["evm"]["bytecode"]["object"]
+
+## Getting the abi
+abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
