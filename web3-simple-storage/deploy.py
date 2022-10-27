@@ -1,8 +1,13 @@
+import os
 import json
+from web3 import Web3
+from dotenv import load_dotenv
 
+import solcx
 from solcx import compile_standard
 
 solcx.install_solc('0.6.0')
+load_dotenv("./web3-python/web3-simple-storage/.env")
 
 with open("./SimpleStorage.sol", "r") as f:
     s2_file = f.read()
@@ -11,7 +16,7 @@ with open("./SimpleStorage.sol", "r") as f:
 compiled_sol = compile_standard(
     {
         "language": "Solidity",
-        "sources": {"SimpleSotrage.sol": {"content": s2_file}},
+        "sources": {"SimpleStorage.sol": {"content": s2_file}},
         "settings": {"outputSelection":
             {"*":
                 {
@@ -31,3 +36,13 @@ bytecode = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["evm"
 
 ## Getting the abi
 abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
+
+# Blockchain connecting details
+w3 = Web3(Web3.HTTPProvider(os.getenv("HTTP_PROVIDER")))
+chain_id = os.getenv("CHAIN_ID")
+my_addr = os.getenv("ADDRESS")
+private_key = os.getenv("PRIVATE_KEY")
+
+# Create contract in python
+SimpleStorage = w3.eth.contract(abi=abi, bytecode=bytecode)
+print(SimpleStorage)
