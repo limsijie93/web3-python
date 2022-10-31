@@ -88,3 +88,4 @@ signed_store_txn = w3.eth.account.sign_transaction(store_txn,
                                                    private_key=private_key)
 send_store_txn = w3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
 txn_receipt = w3.eth.wait_for_transaction_receipt(send_store_txn)
+print(simple_storage.functions.retrieve().call())
