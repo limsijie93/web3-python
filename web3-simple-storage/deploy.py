@@ -56,7 +56,8 @@ print(nonce)
 
 ### 1. Build contract Deploy Transaction
 transaction = SimpleStorage.constructor().build_transaction({
-    "chainId": chain_id,
+    "gasPrice":  w3.eth.gas_price,
+    "chainId":  w3.eth.chain_id, #NOTE: chain_id is not the same as network_id. Use chain_id from w3.eth instead
     "from": my_addr,
     "nonce": nonce
 })
