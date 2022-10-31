@@ -64,8 +64,7 @@ transaction = SimpleStorage.constructor().build_transaction({
 ## This returns the data key. The value encompasses what happens in the SimpleStorage blockchain
 
 ### 2. Sign the Transaction
-signed_txn = w3.eth.account.sign_transaction(
-    transaction=transaction, private_key=private_key)
+signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
 
 ### 3. Send Transaction to the blockchaincal
 
@@ -79,14 +78,16 @@ simple_storage = w3.eth.contract(address=txn_receipt.contractAddress, abi=abi)
 
 ## NOTE: We can't just use print. We need to add either Call or Transact method behind
 print(simple_storage.functions.retrieve().call()) # this is the rerieve function from the SimpleStorage.sol
-print(simple_storage.functions.store(15).call())
+print(simple_storage.functions.store(15).call()) # This returns [] becuase the rerieve function from the SimpleStorage.sol doesn't return anything
 ## Call: Doesn't make a state change to the blockchain. It's just a simulation
 ## Transact: We make a state change
 store_txn = simple_storage.functions.store(15).buildTransaction({
-    "chainId": chain_id, "from": my_addr, "nonce": nonce+1
+    "gasPrice": w3.eth.gas_price,
+    "chainId": w3.eth.chain_id,
+    "from": my_addr, "nonce": nonce+1
 })
 signed_store_txn = w3.eth.account.sign_transaction(store_txn,
                                                    private_key=private_key)
 send_store_txn = w3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
 txn_receipt = w3.eth.wait_for_transaction_receipt(send_store_txn)
-print(simple_storage.functions.retrieve().call())
+print(simple_storage.functions.retrieve().call()) # this now returns 15 because we stored 15 in line 84
