@@ -77,6 +77,10 @@ txn_receipt = w3.eth.wait_for_transaction_receipt(txn_hash) # this waits for tra
 simple_storage = w3.eth.contract(address=txn_receipt.contractAddress, abi=abi)
 
 ## NOTE: We can't just use print. We need to add either Call or Transact method behind
-print(simple_storage.functions.retrieve().call(0)) # this is the rerieve function from the SimpleStorage.sol
-## Call: Doesn't make a state change to the blockchain
+print(simple_storage.functions.retrieve().call()) # this is the rerieve function from the SimpleStorage.sol
+print(simple_storage.functions.store(15).call())
+## Call: Doesn't make a state change to the blockchain. It's just a simulation
 ## Transact: We make a state change
+store_transaction = simple_storage.functions.store(15).buildTransaction({
+    "chainId": chain_id, "from": my_addr, "nounce": nounce+1
+})
