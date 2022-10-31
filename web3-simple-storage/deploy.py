@@ -81,6 +81,10 @@ print(simple_storage.functions.retrieve().call()) # this is the rerieve function
 print(simple_storage.functions.store(15).call())
 ## Call: Doesn't make a state change to the blockchain. It's just a simulation
 ## Transact: We make a state change
-store_transaction = simple_storage.functions.store(15).buildTransaction({
+store_txn = simple_storage.functions.store(15).buildTransaction({
     "chainId": chain_id, "from": my_addr, "nounce": nounce+1
 })
+signed_store_txn = w3.eth.account.sign_transaction(store_txn,
+                                                   private_key=private_key)
+send_store_txn = w3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
+txn_receipt = w3.eth.wait_for_transaction_receipt(send_store_txn)
