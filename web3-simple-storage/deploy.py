@@ -51,14 +51,14 @@ print(SimpleStorage)
 ## To make a state change on the blockchain.
 
 ####### Nounce
-nounce = w3.eth.getTransactionCount(my_addr)
-print(nounce)
+nonce = w3.eth.getTransactionCount(my_addr) #NOTE: Make sure that your blockchain (i.e. Ganache) is running
+print(nonce)
 
 ### 1. Build contract Deploy Transaction
 transaction = SimpleStorage.constructor().build_transaction({
-    "chainid": chain_id,
+    "chainId": chain_id,
     "from": my_addr,
-    "nounce": nounce
+    "nonce": nonce
 })
 ## This returns the data key. The value encompasses what happens in the SimpleStorage blockchain
 
@@ -82,7 +82,7 @@ print(simple_storage.functions.store(15).call())
 ## Call: Doesn't make a state change to the blockchain. It's just a simulation
 ## Transact: We make a state change
 store_txn = simple_storage.functions.store(15).buildTransaction({
-    "chainId": chain_id, "from": my_addr, "nounce": nounce+1
+    "chainId": chain_id, "from": my_addr, "nonce": nonce+1
 })
 signed_store_txn = w3.eth.account.sign_transaction(store_txn,
                                                    private_key=private_key)
